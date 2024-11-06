@@ -1,0 +1,77 @@
+---
+---
+
+<section>
+    <h1>SOFTWARE ENGINEERING</h1>
+    <div class="node-wrapper">
+        <p>SOFTWARE ENGINEERING SOFTWARE ENGINEERING</p>
+    </div>
+    <div class="node-wrapper">
+        <p>SOFTWARE ENGINEERING SOFTWARE ENGINEERING</p>
+    </div>
+</section>
+
+<style>
+    h1 {
+        font-size: 4rem;
+        text-align: center;
+    }
+
+    p {
+        font-size: 3rem;
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        width: max-content;
+        transition: all 16s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+
+    .node-wrapper:first-of-type > p {
+        left: 50%;
+        transform: translateY(-50%) translateX(-50%);
+    }
+
+    .node-wrapper:nth-of-type(2) > p {
+        right: 50%;
+        transform: translateY(-50%) translateX(50%);
+    }
+
+    .node-wrapper {
+        position: relative;
+        height: 75px;
+    }
+</style>
+
+<script>
+    const firstNode = document.querySelector<HTMLElement>(".node-wrapper:first-of-type > p");
+    const secondNode = document.querySelector<HTMLElement>(".node-wrapper:nth-of-type(2) > p");
+    let animationFrameId: number;
+
+    document.onmousemove = (event: MouseEvent) => {
+        const x: string = event.clientX * 100 / window.innerWidth + "%";
+
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+
+        animationFrameId = requestAnimationFrame(() => {
+            if (firstNode && secondNode) {
+                firstNode.style.left = x;
+                secondNode.style.right = x;
+            }
+        });
+    }
+
+    document.onmouseout = () => {
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+
+        animationFrameId = requestAnimationFrame(() => {
+            if(firstNode && secondNode){
+                firstNode.style.left = "50%";
+                secondNode.style.right = "50%";
+            }
+        });
+    }
+</script>
