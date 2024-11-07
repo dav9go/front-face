@@ -1,0 +1,196 @@
+---
+---
+
+<section>
+    <canvas>
+
+    </canvas>
+</section>
+
+<style>
+
+    section {
+        display: flex;
+        justify-content: center;
+    } 
+
+    canvas {
+        border-top: 5px solid white;
+        border-bottom: 5px solid white;
+        box-sizing: border-box;
+    }
+</style>
+
+<script>
+    type Player = {
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        velocityY: number
+    }
+
+    type Ball = Player & {
+        velocityX: number
+    }
+
+    let board: HTMLCanvasElement;
+    let boardWidth: number = window.innerWidth;
+    let boardHeight: number = 600;
+    let context: CanvasRenderingContext2D | null;
+
+    const playerWidth: number = 10;
+    const playerHeight: number = 70;
+    const playerPadding: number = 10;
+    const playerVelocityY: number = 0;
+
+    const ballWidth: number = 10;
+    const ballHeight: number = 10;
+    const ballVelocityY: number = 2;
+    const ballVelocityX: number = -15;
+    let ball: Ball = {
+        x: boardWidth / 2,
+        y: boardHeight / 2,
+        width: ballWidth,
+        height: ballHeight,
+        velocityX: ballVelocityX,
+        velocityY: ballVelocityY
+    }
+
+    const playerOne: Player = {
+        x: playerPadding,
+        y: boardHeight / 2,
+        width: playerWidth,
+        height: playerHeight,
+        velocityY: playerVelocityY
+    }
+    
+    let playerTwo: Player = {
+        x: boardWidth - playerWidth - playerPadding,
+        y: boardHeight / 2,
+        width: playerWidth,
+        height: playerHeight,
+        velocityY: playerVelocityY
+    }
+    
+    let playerOneScore: number = 0;
+    let playerTwoScore: number = 0;
+
+    window.onload = (): void => {
+        board = document.querySelector("canvas") as HTMLCanvasElement;
+        board.height = boardHeight;
+        board.width = boardWidth;
+        context = board.getContext("2d");
+
+        if(context){
+            drawPlayers();
+            drawBall();
+            requestAnimationFrame(update);
+            document.addEventListener("keydown", movePlayer);
+        }
+    }
+
+    const update = (): void => {
+        requestAnimationFrame(update);
+
+        if(context){
+            context.clearRect(0, 0, board.width, board.height);
+            drawPlayers();
+            drawBall();
+
+            if(detectCollision(ball, playerOne)) {
+                if(ball.x <= playerOne.x + playerOne.width){
+                    ball.velocityX *= -1;
+                }
+            } else if (detectCollision(ball, playerTwo)) {
+                if(ball.x + ballWidth >= playerTwo.x) {
+                    ball.velocityX *= -1;
+                }
+            }
+
+            if(ball.x < 0) {
+                playerTwoScore++;
+                resetPoint(Math.abs(ballVelocityX) * -1);
+            } else if (ball.x + ballWidth > boardWidth) {
+                playerOneScore++
+                resetPoint(Math.abs(ballVelocityX));
+            }
+
+            for (let i = 10; i < board.height; i += 25) {
+                context.fillRect(board.width / 2 - 10, i, 5, 5);
+            }
+        }        
+    }
+
+    const drawPlayers = (): void => {
+        if (context) {
+            context.fillStyle = "white";
+            const nextPlayerOneY = playerOne.y + playerOne.velocityY;
+            const nextPlayerTwoY = playerTwo.y + playerTwo.velocityY;
+            if(!outOfBounds(nextPlayerOneY)){
+                playerOne.y = nextPlayerOneY;
+            }
+            if(!outOfBounds(nextPlayerTwoY)){
+                playerTwo.y = nextPlayerTwoY;
+            }
+            context.fillRect(playerOne.x, playerOne.y, playerOne.width, playerOne.height);
+            context.fillRect(playerTwo.x, playerTwo.y, playerTwo.width, playerTwo.height);
+        }
+    }
+
+    const drawBall = (): void => {
+        if (context) {
+            context.fillStyle = "white";
+            ball.x += ball.velocityX;
+            ball.y += ball.velocityY;
+            context.fillRect(ball.x, ball.y, ball.width, ball.height);
+
+            if(ballHitBoundY()){
+                ball.velocityY *= -1;
+            }
+        }
+    }
+
+    const movePlayer = (e: KeyboardEvent): void => {
+        if(e.code === "KeyW"){
+            playerOne.velocityY = -3
+        }
+
+        if(e.code === "KeyS"){
+            playerOne.velocityY = 3
+        }
+
+        if(e.code === "ArrowUp"){
+            playerTwo.velocityY = -3
+        }
+
+        if(e.code === "ArrowDown"){
+            playerTwo.velocityY = 3
+        }
+    }
+
+    const outOfBounds = (yPosition: number): boolean => {
+        return (yPosition < 1 || yPosition + playerHeight + 1 > boardHeight)
+    }
+
+    const ballHitBoundY = (): boolean => {
+        return (ball.y <= 0 || (ball.y + ball.height >= boardHeight))
+    }
+
+    const detectCollision = (a: Ball, b: Player): boolean => {
+        return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
+    }
+
+    const resetPoint = (direction: number): void => {
+        const randomYDirection: number = Math.random() < 0.5 ? 1 : -1;
+        
+        ball = {
+            x: boardWidth / 2,
+            y: boardHeight / 2,
+            width: ballWidth,
+            height: ballHeight,
+            velocityX: direction,
+            velocityY: ballVelocityY * randomYDirection
+        }
+    }
+</script>
