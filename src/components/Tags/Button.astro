@@ -1,0 +1,68 @@
+---
+const { text, id } = Astro.props;
+---
+
+<button id={id}>
+    <span class="y-span top"></span>
+    <span class="x-span left"></span>
+        {text}
+    <span class="x-span right"></span>
+    <span class="y-span bottom"></span>
+</button>
+
+<style>
+    :root {
+        --border-thickness: 4px;
+    }
+
+    button {
+        background-color: transparent;
+        border: none;
+        color: white;
+        font-family: "Lucida Console", Monaco, monospace;
+        font-weight: bold;
+        position: relative;
+        padding: 1rem .75rem;
+        transition: color 0.3s ease, background-color 0.3s ease;
+    }
+
+    button:hover {
+        cursor: pointer;
+        background-color: green;
+        color: black;
+    }
+
+    .y-span {
+        position: absolute;
+        left: 50%;
+        width: calc(100% - (var(--border-thickness) * 2));
+        height: 4px;
+        background-color: white;
+        transform: translateX(-50%);
+    }
+
+    .y-span.top {
+        top: calc(0px - var(--border-thickness));
+    }
+
+    .y-span.bottom {
+        bottom: calc(0px - var(--border-thickness));
+    }
+
+    .x-span {
+        position: absolute;
+        top: 50%;
+        width: 4px;
+        height: 100%;
+        background-color: white;
+        transform: translateY(-50%);
+    }
+
+    .x-span.left {
+        left: 0;
+    }
+
+    .x-span.right {
+        right: 0;
+    }
+</style>

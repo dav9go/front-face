@@ -1,4 +1,5 @@
 ---
+import Button from "./Tags/Button.astro"
 ---
 
 <section>
@@ -8,6 +9,9 @@
     </div>
     <div class="node-wrapper">
         <p>SOFTWARE ENGINEERING SOFTWARE ENGINEERING</p>
+    </div>
+    <div>
+        <Button text="This effect is annoying me &uarr;" id="effect-annoying" />
     </div>
 </section>
 
@@ -24,6 +28,12 @@
         top: 50%;
         width: max-content;
         transition: all 16s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+
+    div:nth-of-type(3){
+        display: grid;
+        place-items: center;
+        margin: 2rem
     }
 
     .node-wrapper:first-of-type > p {
@@ -45,9 +55,15 @@
 <script>
     const firstNode = document.querySelector<HTMLElement>(".node-wrapper:first-of-type > p");
     const secondNode = document.querySelector<HTMLElement>(".node-wrapper:nth-of-type(2) > p");
+    const annoyingButton = document.querySelector<HTMLButtonElement>("#effect-annoying");
+    const wantAnnoyingEffect: string | null = localStorage.getItem("annoying-effect");
     let animationFrameId: number;
 
-    document.onmousemove = (event: MouseEvent) => {
+    if(wantAnnoyingEffect === "false") {
+        document.onmousemove = null;
+        document.onmouseout = null;
+    } else {
+        document.onmousemove = (event: MouseEvent): void => {
         const x: string = event.clientX * 100 / window.innerWidth + "%";
 
         if (animationFrameId) {
@@ -55,14 +71,19 @@
         }
 
         animationFrameId = requestAnimationFrame(() => {
-            if (firstNode && secondNode) {
-                firstNode.style.left = x;
-                secondNode.style.right = x;
-            }
-        });
+                if (firstNode && secondNode) {
+                    firstNode.style.left = x;
+                    secondNode.style.right = x;
+                }
+            });
+        }
+
+        document.onmouseout = (): void => {
+            stopAnimation();
+        }
     }
 
-    document.onmouseout = () => {
+    const stopAnimation = (): void => {
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);
         }
@@ -73,5 +94,13 @@
                 secondNode.style.right = "50%";
             }
         });
+    }
+
+    if(annoyingButton) {
+        annoyingButton.onclick = (): void => {
+            localStorage.setItem("annoying-effect", "false");
+            stopAnimation();
+            document.onmousemove = null;
+        }
     }
 </script>
