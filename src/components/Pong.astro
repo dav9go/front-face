@@ -3,11 +3,11 @@ import Heart from "./items/Heart.astro"
 ---
 <menu>
     <div class="score-wrapper">
-        <Heart id="0" />
-        <Heart id="1" />
-        <Heart id="2" />
-        <Heart id="3" />
         <Heart id="4" />
+        <Heart id="3" />
+        <Heart id="2" />
+        <Heart id="1" />
+        <Heart id="0" />
         <p class="score player-one">0</p>
     </div>
     <div class="score-wrapper">
@@ -70,6 +70,16 @@ import Heart from "./items/Heart.astro"
     let board: HTMLCanvasElement;
     let playerOneScoreboard: HTMLParagraphElement;
     let playerTwoScoreboard: HTMLParagraphElement;
+    let heartZero: HTMLDivElement;
+    let heartOne: HTMLDivElement;
+    let heartTwo: HTMLDivElement;
+    let heartThree: HTMLDivElement;
+    let heartFour: HTMLDivElement;
+    let heartFive: HTMLDivElement;
+    let heartSix: HTMLDivElement;
+    let heartSeven: HTMLDivElement;
+    let heartEight: HTMLDivElement;
+    let heartNine: HTMLDivElement;
     let boardWidth: number = window.innerWidth;
     let boardHeight: number = 600;
     let context: CanvasRenderingContext2D | null;
@@ -111,10 +121,24 @@ import Heart from "./items/Heart.astro"
     let playerOneScore: number = 0;
     let playerTwoScore: number = 0;
 
+    let pointsToMatch: number = 5;
+    let playerOneLives: number = 5;
+    let playerTwoLives: number = 5;
+
     window.onload = (): void => {
         board = document.querySelector("canvas") as HTMLCanvasElement;
         playerOneScoreboard = document.querySelector(".score.player-one") as HTMLParagraphElement;
         playerTwoScoreboard = document.querySelector(".score.player-two") as HTMLParagraphElement;
+        heartZero = document.querySelector("#heart-0") as HTMLDivElement;
+        heartOne = document.querySelector("#heart-1") as HTMLDivElement;
+        heartTwo = document.querySelector("#heart-2") as HTMLDivElement;
+        heartThree = document.querySelector("#heart-3") as HTMLDivElement;
+        heartFour = document.querySelector("#heart-4") as HTMLDivElement;
+        heartFive = document.querySelector("#heart-5") as HTMLDivElement;
+        heartSix = document.querySelector("#heart-6") as HTMLDivElement;
+        heartSeven = document.querySelector("#heart-7") as HTMLDivElement;
+        heartEight = document.querySelector("#heart-8") as HTMLDivElement;
+        heartNine = document.querySelector("#heart-9") as HTMLDivElement;
         board.height = boardHeight;
         board.width = boardWidth;
         context = board.getContext("2d");
@@ -146,11 +170,27 @@ import Heart from "./items/Heart.astro"
             }
 
             if(ball.x < 0) {
-                playerTwoScore++;
+                playerTwoScore++;   
+                if(playerTwoScore >= pointsToMatch) {
+                    playerTwoScore = 0;
+                    playerOneLives -= 1;
+                    const heartSelected = getHeartLost(playerOneLives, 1);
+                    if(heartSelected) {
+                        lostLifeAnimation(heartSelected)
+                    }
+                }
                 playerTwoScoreboard.innerText = String(playerTwoScore);
                 resetPoint(Math.abs(ballVelocityX) * -1);
             } else if (ball.x + ballWidth > boardWidth) {
                 playerOneScore++;
+                if(playerOneScore >= pointsToMatch) {
+                    playerOneScore = 0;
+                    playerTwoLives -= 1;
+                    const heartSelected = getHeartLost(playerTwoLives, 2);
+                    if(heartSelected) {
+                        lostLifeAnimation(heartSelected)
+                    }
+                }
                 playerOneScoreboard.innerText = String(playerOneScore);
                 resetPoint(Math.abs(ballVelocityX));
             }
@@ -232,4 +272,50 @@ import Heart from "./items/Heart.astro"
             velocityY: ballVelocityY * randomYDirection
         }
     }
+
+    const lostLifeAnimation = (heart: HTMLDivElement):void => {
+        if(heart) {
+            const loops: number = 5;
+
+            for(let i = 0; i < loops; i++) {
+                setTimeout((): void => {
+                    heart.classList.toggle("heart");
+                    heart.classList.toggle("reversed-heart");
+                }, 300 * i);
+            }
+        }
+    }
+
+    const getHeartLost = (playerScore: number, player: number ): HTMLDivElement | undefined => {
+        if(player === 1) {
+            switch (playerScore) {
+                case 0:
+                    return heartZero;
+                case 1:
+                    return heartOne;
+                case 2:
+                    return heartTwo;
+                case 3:
+                    return heartThree;
+                case 4:
+                    return heartFour;
+
+            }
+        } else if (player === 2) {
+            switch (playerScore) {
+                case 0:
+                    return heartFive;
+                case 1:
+                    return heartSix;
+                case 2:
+                    return heartSeven;
+                case 3:
+                    return heartEight;
+                case 4:
+                    return heartNine;
+
+            }
+        }
+    }
+    
 </script>
