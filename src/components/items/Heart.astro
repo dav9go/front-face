@@ -1,0 +1,120 @@
+---
+const { id } = Astro.props;
+---
+
+<div class="heart" id={`heart-${id}`} />
+
+
+<style>
+    .heart {
+        width: 5px;
+        height: 5px;
+        background-color: #121212;
+        transform: translateY(-14px);
+        box-shadow: 
+        5px 0 red,
+        10px 0 red,
+        15px 0 #121212,
+        20px 0 red,
+        25px 0 red,
+        30px 0 #121212,
+
+        0 5px red,
+        5px 5px red,
+        10px 5px red,
+        15px 5px red,
+        20px 5px red,
+        25px 5px red,
+        30px 5px red,
+
+        0 10px red,
+        5px 10px red,
+        10px 10px red,
+        15px 10px red,
+        20px 10px red,
+        25px 10px red,
+        30px 10px red,
+
+        0 15px #121212,
+        5px 15px red,
+        10px 15px red,
+        15px 15px red,
+        20px 15px red,
+        25px 15px red,
+        30px 15px #121212,
+
+        0 20px #121212,
+        5px 20px #121212,
+        10px 20px red,
+        15px 20px red,
+        20px 20px red,
+        25px 20px #121212,
+        30px 20px #121212,
+
+        0 25px #121212,
+        5px 25px #121212,
+        10px 25px #121212,
+        15px 25px red,
+        20px 25px #121212,
+        25px 25px #121212,
+        30px 25px #121212
+    }
+
+    .reversed-heart {
+        width: 5px;
+        height: 5px;
+        background-color: red;
+        transform: translateY(-14px);
+        box-shadow: 
+        5px 0 #121212,
+        10px 0 #121212,
+        15px 0 red,
+        20px 0 #121212,
+        25px 0 #121212,
+        30px 0 red,
+
+        -5px 5px red,
+        0 5px #121212,
+        5px 5px red,
+        10px 5px #121212,
+        15px 5px #121212,
+        20px 5px #121212,
+        25px 5px red,
+        30px 5px #121212,
+        35px 5px red,
+
+        -5px 10px red,
+        0 10px #121212,
+        5px 10px #121212,
+        10px 10px #121212,
+        15px 10px #121212,
+        20px 10px #121212,
+        25px 10px #121212,
+        30px 10px #121212,
+        35px 10px red,
+
+        0 15px red,
+        5px 15px #121212,
+        10px 15px #121212,
+        15px 15px #121212,
+        20px 15px #121212,
+        25px 15px #121212,
+        30px 15px red,
+
+        0 20px #121212,
+        5px 20px red,
+        10px 20px #121212,
+        15px 20px #121212,
+        20px 20px #121212,
+        25px 20px red,
+        30px 20px #121212,
+
+        0 25px #121212,
+        5px 25px #121212,
+        10px 25px red,
+        15px 25px #121212,
+        20px 25px red,
+        25px 25px #121212,
+        30px 25px #121212
+    }
+</style>
