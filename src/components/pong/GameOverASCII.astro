@@ -1,0 +1,43 @@
+<div class="ascii-art-wrapper">
+    <div class="ascii-art game-over">
+
+        <span>--------</span>_____          __  __ ______    ______      ________ _____  
+        / ____|   /\   |  \/  |  ____|  / __ \ \    / /  ____|  __ \ 
+       | |  __   /  \  | \  / | |__    | |  | \ \  / /| |__  | |__) |
+       | | |_ | / /\ \ | |\/| |  __|   | |  | |\ \/ / |  __| |  _  / 
+       | |__| |/ ____ \| |  | | |____  | |__| | \  /  | |____| | \ \ 
+        \_____/_/    \_\_|  |_|______|  \____/   \/   |______|_|  \_\
+                                                                     
+                                                                     
+       
+    </div>
+    </div>
+    
+<style>
+    span {
+        visibility: hidden;
+    }
+    
+    .game-over {
+        scale: 0.9;
+        animation: flashing 2s ease-in-out;
+    }
+
+    .game-over {
+        font-family: monospace;
+        white-space: pre;
+        animation: flashing 1.5s ease-in-out infinite;
+    }
+
+    @keyframes flashing {
+        0% {
+            opacity: 0;
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+</style>
