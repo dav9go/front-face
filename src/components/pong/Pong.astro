@@ -65,7 +65,7 @@ import Finished from "./Finished.astro"
 <style is:global>
     .restart-wrapper {
         position: absolute;
-        top: 50%;
+        top: 42.5%;
         left: 50%;
         transform: translate(-50%, -50%);
         display: flex;
@@ -200,6 +200,8 @@ import Finished from "./Finished.astro"
                     playerTwoScore = initialPlayersScore;
                     playerOneLives = initialPlayersLives;
                     playerTwoLives = initialPlayersLives;
+                    playerOneScoreboard.innerText = String(initialPlayersScore);
+                    playerTwoScoreboard.innerText = String(initialPlayersScore);
                     resetHearts();
                     if(timeoutsIds.length > 0) {
                         timeoutsIds.forEach((id) => {
