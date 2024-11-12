@@ -1,6 +1,10 @@
 ---
-import Heart from "./items/Heart.astro"
+import PongASCII from "./PongASCII.astro"
+import Heart from "../items/Heart.astro"
+import Finished from "./Finished.astro"
 ---
+
+<PongASCII />
 <menu>
     <div class="score-wrapper">
         <Heart id="4" />
@@ -23,6 +27,7 @@ import Heart from "./items/Heart.astro"
     <canvas>
         
     </canvas>
+    <Finished />
 </section>
 
 <style>
@@ -45,12 +50,28 @@ import Heart from "./items/Heart.astro"
     section {
         display: flex;
         justify-content: center;
+        position: relative;
     } 
 
     canvas {
         border-top: 5px solid white;
         border-bottom: 5px solid white;
         box-sizing: border-box;
+    }
+
+    
+</style>
+
+<style is:global>
+    .restart-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    #restart-button {
+        display: none;
     }
 </style>
 
@@ -70,6 +91,7 @@ import Heart from "./items/Heart.astro"
     let board: HTMLCanvasElement;
     let playerOneScoreboard: HTMLParagraphElement;
     let playerTwoScoreboard: HTMLParagraphElement;
+    let restartButton: HTMLButtonElement;
     let heartZero: HTMLDivElement;
     let heartOne: HTMLDivElement;
     let heartTwo: HTMLDivElement;
@@ -93,7 +115,8 @@ import Heart from "./items/Heart.astro"
     const ballHeight: number = 10;
     const ballVelocityY: number = 2;
     const ballVelocityX: number = -15;
-    let ball: Ball = {
+
+    const initialBall: Ball = {
         x: boardWidth / 2,
         y: boardHeight / 2,
         width: ballWidth,
@@ -102,33 +125,40 @@ import Heart from "./items/Heart.astro"
         velocityY: ballVelocityY
     }
 
-    const playerOne: Player = {
+    const initialPlayerOne: Player = {
         x: playerPadding,
         y: boardHeight / 2,
         width: playerWidth,
         height: playerHeight,
         velocityY: playerVelocityY
     }
-    
-    let playerTwo: Player = {
+
+    const initialPlayerTwo: Player = {
         x: boardWidth - playerWidth - playerPadding,
         y: boardHeight / 2,
         width: playerWidth,
         height: playerHeight,
         velocityY: playerVelocityY
-    }
-    
-    let playerOneScore: number = 0;
-    let playerTwoScore: number = 0;
+    } 
 
-    let pointsToMatch: number = 5;
-    let playerOneLives: number = 5;
-    let playerTwoLives: number = 5;
+    let ball: Ball = initialBall;
+    let playerOne: Player =  initialPlayerOne;
+    let playerTwo: Player = initialPlayerTwo;
+    
+    const initialPlayersScore: number = 0;
+    let playerOneScore: number = initialPlayersScore;
+    let playerTwoScore: number = initialPlayersScore;
+
+    const initialPlayersLives: number = 5;
+    let pointsToMatch: number = 3;
+    let playerOneLives: number = initialPlayersLives;
+    let playerTwoLives: number = initialPlayersLives;
 
     window.onload = (): void => {
         board = document.querySelector("canvas") as HTMLCanvasElement;
         playerOneScoreboard = document.querySelector(".score.player-one") as HTMLParagraphElement;
         playerTwoScoreboard = document.querySelector(".score.player-two") as HTMLParagraphElement;
+        restartButton = document.querySelector("#restart-button") as HTMLButtonElement;
         heartZero = document.querySelector("#heart-0") as HTMLDivElement;
         heartOne = document.querySelector("#heart-1") as HTMLDivElement;
         heartTwo = document.querySelector("#heart-2") as HTMLDivElement;
@@ -156,49 +186,72 @@ import Heart from "./items/Heart.astro"
 
         if(context){
             context.clearRect(0, 0, board.width, board.height);
-            drawPlayers();
-            drawBall();
-
-            if(detectCollision(ball, playerOne)) {
-                if(ball.x <= playerOne.x + playerOne.width){
-                    ball.velocityX *= -1;
+            if(playerOneLives <= 0 || playerTwoLives <= 0) {
+                restartButton.style.display = "block";
+                restartButton.onclick = (): void => {
+                    ball = initialBall;
+                    playerOne =  initialPlayerOne;
+                    playerTwo = initialPlayerTwo;
+                    playerOneScore = initialPlayersScore;
+                    playerTwoScore = initialPlayersScore;
+                    playerOneLives = initialPlayersLives;
+                    playerTwoLives = initialPlayersLives;
+                    resetHearts();
+                    restartButton.style.display = "none";
                 }
-            } else if (detectCollision(ball, playerTwo)) {
-                if(ball.x + ballWidth >= playerTwo.x) {
-                    ball.velocityX *= -1;
-                }
-            }
+            } else {
+                drawPlayers();
+                drawBall();
 
-            if(ball.x < 0) {
-                playerTwoScore++;   
-                if(playerTwoScore >= pointsToMatch) {
-                    playerTwoScore = 0;
-                    playerOneLives -= 1;
-                    const heartSelected = getHeartLost(playerOneLives, 1);
-                    if(heartSelected) {
-                        lostLifeAnimation(heartSelected)
+                if(detectCollision(ball, playerOne)) {
+                    if(ball.x <= playerOne.x + playerOne.width){
+                        ball.velocityX *= -1;
+                    }
+                } else if (detectCollision(ball, playerTwo)) {
+                    if(ball.x + ballWidth >= playerTwo.x) {
+                        ball.velocityX *= -1;
                     }
                 }
-                playerTwoScoreboard.innerText = String(playerTwoScore);
-                resetPoint(Math.abs(ballVelocityX) * -1);
-            } else if (ball.x + ballWidth > boardWidth) {
-                playerOneScore++;
-                if(playerOneScore >= pointsToMatch) {
-                    playerOneScore = 0;
-                    playerTwoLives -= 1;
-                    const heartSelected = getHeartLost(playerTwoLives, 2);
-                    if(heartSelected) {
-                        lostLifeAnimation(heartSelected)
-                    }
-                }
-                playerOneScoreboard.innerText = String(playerOneScore);
-                resetPoint(Math.abs(ballVelocityX));
-            }
 
-            for (let i = 10; i < board.height; i += 25) {
-                context.fillRect(board.width / 2 - 10, i, 5, 5);
+                if(ball.x < 0) {
+                    playerTwoMakesPoint();
+                } else if (ball.x + ballWidth > boardWidth) {
+                    playerOneMakesPoint();
+                }
+
+                for (let i = 10; i < board.height; i += 25) {
+                    context.fillRect(board.width / 2 - 10, i, 5, 5);
+                }
             }
         }        
+    }
+
+    const playerOneMakesPoint = (): void => {
+        playerOneScore++;
+        if(playerOneScore >= pointsToMatch) {
+            playerOneScore = 0;
+            playerTwoLives -= 1;
+            const heartSelected = getHeartLost(playerTwoLives, 2);
+            if(heartSelected) {
+                lostLifeAnimation(heartSelected)
+            }
+        }
+        playerOneScoreboard.innerText = String(playerOneScore);
+        resetPoint(Math.abs(ballVelocityX));
+    }
+
+    const playerTwoMakesPoint = (): void => {
+        playerTwoScore++;   
+        if(playerTwoScore >= pointsToMatch) {
+            playerTwoScore = 0;
+            playerOneLives -= 1;
+            const heartSelected = getHeartLost(playerOneLives, 1);
+            if(heartSelected) {
+                lostLifeAnimation(heartSelected)
+            }
+        }
+        playerTwoScoreboard.innerText = String(playerTwoScore);
+        resetPoint(Math.abs(ballVelocityX) * -1);
     }
 
     const drawPlayers = (): void => {
@@ -239,11 +292,11 @@ import Heart from "./items/Heart.astro"
             playerOne.velocityY = 6
         }
 
-        if(e.code === "ArrowUp"){
+        if(e.code === "KeyI"){
             playerTwo.velocityY = -6
         }
 
-        if(e.code === "ArrowDown"){
+        if(e.code === "KeyK"){
             playerTwo.velocityY = 6
         }
     }
@@ -284,6 +337,14 @@ import Heart from "./items/Heart.astro"
                 }, 300 * i);
             }
         }
+    }
+
+    const resetHearts = (): void => {
+        const allHearts: HTMLDivElement[] = [heartZero, heartOne, heartTwo, heartThree, heartFour, heartFive, heartSix, heartSeven, heartEight, heartNine];
+        allHearts.forEach((heart) => {
+        heart.classList.add("heart");
+        heart.classList.remove("reversed-heart");
+    });
     }
 
     const getHeartLost = (playerScore: number, player: number ): HTMLDivElement | undefined => {

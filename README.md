@@ -45,3 +45,8 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## ASCII Font
+
+name: Big
+Webpage: [Text to ASCII](https://patorjk.com/software/taag/#p=testall&f=1Row&t=EVIL%20PONG)
