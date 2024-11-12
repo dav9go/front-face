@@ -50,3 +50,16 @@ import Pong from "../components/pong/Pong.astro"
         font-size: 16px;
     }
 </style>
+
+<script>
+const titleText = " ★☆★ React Developer";
+let position = 0;
+
+function scrollTitle() {
+    document.title = titleText.slice(position) + titleText.slice(0, position);
+    position = (position + 1) % titleText.length;
+    setTimeout(scrollTitle, 200);
+}
+
+scrollTitle();
+</script>
