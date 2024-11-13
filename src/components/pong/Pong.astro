@@ -2,9 +2,11 @@
 import PongASCII from "./PongASCII.astro"
 import Heart from "../items/Heart.astro"
 import Finished from "./Finished.astro"
+import Level from "./Level.astro"
 ---
 
 <PongASCII />
+<p>Yet another pong game</p>
 <menu>
     <div class="score-wrapper">
         <Heart id="4" />
@@ -14,13 +16,16 @@ import Finished from "./Finished.astro"
         <Heart id="0" />
         <p class="score player-one">0</p>
     </div>
+    <Level />
     <div class="score-wrapper">
         <p class="score player-two">0</p>
-        <Heart id="5" />
-        <Heart id="6" />
-        <Heart id="7" />
-        <Heart id="8" />
-        <Heart id="9" />
+        <div class="score-wrapper player-two">
+            <Heart id="5" />
+            <Heart id="6" />
+            <Heart id="7" />
+            <Heart id="8" />
+            <Heart id="9" />
+        </div>
     </div>
 </menu>
 <section>
@@ -34,12 +39,17 @@ import Finished from "./Finished.astro"
     menu {
         display: flex;
         justify-content: space-around;
+        position: relative;
     }
 
     .score-wrapper {
         display: flex;
         align-items: center;
         gap: 50px;
+    }
+
+    .score-wrapper.player-two {
+        transform: translateX(-30px); /*Width of heart*/
     }
 
     .score {
@@ -59,7 +69,10 @@ import Finished from "./Finished.astro"
         box-sizing: border-box;
     }
 
-    
+    p {
+        text-align: center;
+        margin: -2rem 0 2rem 0;
+    }
 </style>
 
 <style is:global>

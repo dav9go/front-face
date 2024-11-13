@@ -1,8 +1,13 @@
 ---
-import Column from "../tags/Column.astro"
+import TechASCII from "./TechASCII.astro"
+import ASCIIcontainer from "../tags/ASCIIcontainer.astro"
 ---
 
 
 <section>
-    <Column />
+    <TechASCII />
+    <ASCIIcontainer>
+        <p>This is content passed as children.</p>
+  <p>You can also pass more HTML here.</p>
+    </ASCIIcontainer>
 </section>

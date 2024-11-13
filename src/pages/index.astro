@@ -62,8 +62,9 @@ import Tech from "../components/tech/Tech.astro";
 
 html, body {
 	overflow-x: hidden;
+	width: 2200px;
 	max-width: 100%;
-		
+	margin: 0 auto;
 }
 
 * {
@@ -83,6 +84,7 @@ section {
     white-space: pre;
     text-align: center;
     font-size: 16px;
+	transform: translateX(-2ch);
 }
 </style>
 
@@ -90,11 +92,9 @@ section {
 const titleText = " ★☆★ React Developer";
 let position = 0;
 
-function scrollTitle() {
+(function scrollTitle() {
     document.title = titleText.slice(position) + titleText.slice(0, position);
     position = (position + 1) % titleText.length;
     setTimeout(scrollTitle, 200);
-}
-
-scrollTitle();
+})()
 </script>
