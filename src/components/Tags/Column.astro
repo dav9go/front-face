@@ -1,0 +1,91 @@
+---
+
+---
+
+<div class="retro-container">
+    <span> + <span class="y-border"></span> + </span>
+    <span> | <span class="x-border"></span> | </span>
+    <span> | <span class="x-border"></span> | </span>
+    <span> + <span class="y-border"></span> + </span>
+    <span class="test-element dash">-</span>
+    <span class="test-element plus">+</span>
+</div>
+
+<style>
+    div {
+        display: flex;
+        flex-direction: column;
+        white-space: pre;
+    }
+
+    span {
+        width: min-content;
+    }
+
+    .test-element {
+        position: absolute;
+        visibility: hidden;
+    }
+</style>
+
+<script>
+    let testDashElement: HTMLSpanElement;
+
+    let retroContainer: HTMLDivElement;
+    let Yborders: NodeList;
+    let Xborders: NodeList;
+    
+    window.addEventListener("load", () => {
+        testDashElement = document.querySelector(".test-element.dash") as HTMLSpanElement;
+
+        retroContainer = document.querySelector(".retro-container") as HTMLDivElement;
+        Yborders = document.querySelectorAll(".y-border") as NodeList;
+        Xborders = document.querySelectorAll(".x-border") as NodeList;
+
+        drawASCIIborders();
+    })
+
+    window.onresize = (): void => {
+        drawASCIIborders();
+    }
+
+    const drawASCIIborders = (): void => {
+        if(Yborders.length > 0) {
+            Yborders.forEach((Yborder: Node): void => {
+                Yborder.textContent = "";
+            })
+        }
+
+        if(Xborders.length > 0) {
+            Xborders.forEach((Xborder: Node): void => {
+                Xborder.textContent = "";
+            })
+        }
+
+        const testSpantWidth: number = testDashElement.getBoundingClientRect().width;
+
+        const retroContainerWidth: number = retroContainer.getBoundingClientRect().width - testSpantWidth * 6;
+        const numberOfDashes: number = Math.floor(retroContainerWidth / testSpantWidth);
+
+        if(Yborders.length > 0) {
+            Yborders.forEach((Yborder: Node): void => {
+               for(let i = 0; i < numberOfDashes; i++) {
+                    const spanElement: HTMLSpanElement = document.createElement("span");
+                    spanElement.textContent = "-";
+                    Yborder.appendChild(spanElement);
+               }
+            })
+        }
+
+        if(Xborders.length > 0) {
+            Xborders.forEach((Xborder: Node): void => {
+               for(let i = 0; i < numberOfDashes; i++) {
+                    const spanElement: HTMLSpanElement = document.createElement("span");
+                    spanElement.style.visibility = "hidden";
+                    spanElement.textContent = "-";
+                    Xborder.appendChild(spanElement);
+               }
+            })
+        }
+    }
+</script>

@@ -1,6 +1,7 @@
 ---
-import FollowMouse from "../components/FollowMouse.astro"
-import Pong from "../components/pong/Pong.astro"
+import FollowMouse from "../components/FollowMouse.astro";
+import Pong from "../components/pong/Pong.astro";
+import Tech from "../components/tech/Tech.astro";
 ---
 
 <html lang="en">
@@ -15,40 +16,74 @@ import Pong from "../components/pong/Pong.astro"
 		<main>
 			<FollowMouse />
 			<Pong />
+			<Tech />
 		</main>
 	</body>
 </html>
 
-
-<style>
-	:root {
-		background-color: #121212;
-		color: white;
-		font-family: "Lucida Console", Monaco, monospace;
-	}
-
-	html, body {
-		overflow-x: hidden;
-		max-width: 100%;
-		
-	}
-
-	* {
-		margin: 0;
-		box-sizing: border-box;
-	}
-</style>
-
 <style is:global>
-	.ascii-art-wrapper {
-        margin: 4rem 0;
-    }
+:root {
+	background-color: #121212;
+	color: white;
+	font-family: "Lucida Console", Monaco, monospace;
+
+	/* Black */
+	--black-dark: #000000;
+	--black-light: #808080;
+
+	/* Red */
+	--red-dark: #800000;
+	--red-light: #ff0000;
+
+	/* Green */
+	--green-dark: #008000;
+	--green-light: #00ff00;
+
+	/* Yellow */
+	--yellow-dark: #808000;
+	--yellow-light: #ffff00;
+
+	/* Blue */
+	--blue-dark: #000080;
+	--blue-light: #0000ff;
+
+	/* Magenta */
+	--magenta-dark: #800080;
+	--magenta-light: #ff00ff;
+
+	/* Cyan */
+	--cyan-dark: #008080;
+	--cyan-light: #00ffff;
+
+	/* White */
+	--white-dark: #c0c0c0;
+	--white-light: #ffffff;
+	}
+
+html, body {
+	overflow-x: hidden;
+	max-width: 100%;
+		
+}
+
+* {
+	margin: 0;
+	box-sizing: border-box;
+}
+
+section {
+	margin: 2rem 0;
+}
+
+.ascii-art-wrapper {
+    margin: 4rem 0;
+}
     
-    .ascii-art {
-        white-space: pre;
-        text-align: center;
-        font-size: 16px;
-    }
+.ascii-art {
+    white-space: pre;
+    text-align: center;
+    font-size: 16px;
+}
 </style>
 
 <script>
