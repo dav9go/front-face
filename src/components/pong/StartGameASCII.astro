@@ -1,0 +1,43 @@
+<div class="ascii-art-wrapper">
+    <div class="ascii-art start-game">
+
+        <span>--------</span>_____ _______       _____ _______    _____          __  __ ______ 
+        / ____|__   __|/\   |  __ \__   __|  / ____|   /\   |  \/  |  ____|
+       | (___    | |  /  \  | |__) | | |    | |  __   /  \  | \  / | |__   
+        \___ \   | | / /\ \ |  _  /  | |    | | |_ | / /\ \ | |\/| |  __|  
+        ____) |  | |/ ____ \| | \ \  | |    | |__| |/ ____ \| |  | | |____ 
+       |_____/   |_/_/    \_\_|  \_\ |_|     \_____/_/    \_\_|  |_|______|
+                                                                           
+                                                                           
+      
+    </div>
+    </div>
+    
+<style>
+    span {
+        visibility: hidden;
+    }
+    
+    .start-game {
+        scale: 0.9;
+        animation: flashing 2s ease-in-out;
+    }
+
+    .start-game {
+        font-family: monospace;
+        white-space: pre;
+        animation: flashing 1.5s ease-in-out infinite;
+    }
+
+    @keyframes flashing {
+        0% {
+            opacity: 0;
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+</style>

@@ -3,6 +3,7 @@ import PongASCII from "./PongASCII.astro"
 import Heart from "../items/Heart.astro"
 import Finished from "./Finished.astro"
 import Level from "./Level.astro"
+import Start from "./Start.astro"
 ---
 
 <PongASCII />
@@ -32,6 +33,7 @@ import Level from "./Level.astro"
     <canvas>
         
     </canvas>
+    <Start/>
     <Finished />
 </section>
 
@@ -87,6 +89,17 @@ import Level from "./Level.astro"
         align-items: center;
         display: none;
     }
+
+    .start-game-wrapper {
+        position: absolute;
+        top: 42.5%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
 </style>
 
 <script>
@@ -102,11 +115,18 @@ import Level from "./Level.astro"
         velocityX: number
     }
 
+    let started: boolean = false;
+    let level: number = 1;
+    let levelMultiplier: number = 1.7;
+
     let board: HTMLCanvasElement;
+    let levelDiv: HTMLDivElement;
     let playerOneScoreboard: HTMLParagraphElement;
     let playerTwoScoreboard: HTMLParagraphElement;
     let finishWrapper: HTMLDivElement;
+    let startWrapper: HTMLDivElement;
     let restartButton: HTMLButtonElement;
+    let startButton: HTMLButtonElement;
     let heartZero: HTMLDivElement;
     let heartOne: HTMLDivElement;
     let heartTwo: HTMLDivElement;
@@ -129,7 +149,7 @@ import Level from "./Level.astro"
     const ballWidth: number = 10;
     const ballHeight: number = 10;
     const ballVelocityY: number = 2;
-    const ballVelocityX: number = -19;
+    const ballVelocityX: number = -13;
 
     const initialBall: Ball = {
         x: boardWidth / 2,
@@ -173,10 +193,13 @@ import Level from "./Level.astro"
 
     window.onload = (): void => {
         board = document.querySelector("canvas") as HTMLCanvasElement;
+        levelDiv = document.querySelector(".level") as HTMLDivElement;
         playerOneScoreboard = document.querySelector(".score.player-one") as HTMLParagraphElement;
         playerTwoScoreboard = document.querySelector(".score.player-two") as HTMLParagraphElement;
         finishWrapper = document.querySelector(".restart-wrapper") as HTMLDivElement;
+        startWrapper = document.querySelector(".start-game-wrapper") as HTMLDivElement;
         restartButton = document.querySelector("#restart-button") as HTMLButtonElement;
+        startButton = document.querySelector("#start-button") as HTMLButtonElement;
         heartZero = document.querySelector("#heart-0") as HTMLDivElement;
         heartOne = document.querySelector("#heart-1") as HTMLDivElement;
         heartTwo = document.querySelector("#heart-2") as HTMLDivElement;
@@ -191,12 +214,21 @@ import Level from "./Level.astro"
         board.width = boardWidth;
         context = board.getContext("2d");
 
-        if(context){
-            drawPlayers();
-            drawBall();
-            requestAnimationFrame(update);
-            document.addEventListener("keydown", movePlayer);
+        startButton.onclick = (): void => {
+            startWrapper.style.display = "none";
+            startGame();
         }
+
+        if(context){
+            if(started) {
+                startGame();
+            } 
+        }
+    }
+
+    const startGame = (): void => {
+        requestAnimationFrame(update);
+        document.addEventListener("keydown", movePlayer);
     }
 
     const update = (): void => {
@@ -216,6 +248,7 @@ import Level from "./Level.astro"
                     playerTwoLives = initialPlayersLives;
                     playerOneScoreboard.innerText = String(initialPlayersScore);
                     playerTwoScoreboard.innerText = String(initialPlayersScore);
+                    level = 1;
                     resetHearts();
                     if(timeoutsIds.length > 0) {
                         timeoutsIds.forEach((id) => {
@@ -227,6 +260,7 @@ import Level from "./Level.astro"
             } else {
                 drawPlayers();
                 drawBall();
+                setLevel();
 
                 if(detectCollision(ball, playerOne)) {
                     if(ball.x <= playerOne.x + playerOne.width){
@@ -249,6 +283,38 @@ import Level from "./Level.astro"
                 }
             }
         }        
+    }
+
+    const setLevel = (): void => {
+        switch (playerTwoLives) {
+            case 1:
+                level = 5;
+                levelDiv.classList.remove("level-4");
+                levelDiv.classList.add("level-5");
+                break;
+            case 2:
+                level = 4;
+                levelDiv.classList.remove("level-3");
+                levelDiv.classList.add("level-4");
+                break;
+            case 3:
+                level = 3;
+                levelDiv.classList.remove("level-2");
+                levelDiv.classList.add("level-3");
+                break;
+            case 4:
+                level = 2;
+                levelDiv.classList.remove("level-1");
+                levelDiv.classList.add("level-2");
+                break;
+            default:
+                level = 1;
+                levelDiv.classList.add("level-1");
+                levelDiv.classList.remove("level-2");
+                levelDiv.classList.remove("level-3");
+                levelDiv.classList.remove("level-4");
+                levelDiv.classList.remove("level-5");
+        }
     }
 
     const playerOneMakesPoint = (): void => {
@@ -298,8 +364,9 @@ import Level from "./Level.astro"
     const drawBall = (): void => {
         if (context) {
             context.fillStyle = "white";
-            ball.x += ball.velocityX;
-            ball.y += ball.velocityY;
+            const levelSpeed = level === 1 || level === 2 ? 1 : (level / 5) * levelMultiplier;
+            ball.x += ball.velocityX * levelSpeed;
+            ball.y += ball.velocityY * levelSpeed;
             context.fillRect(ball.x, ball.y, ball.width, ball.height);
 
             if(ballHitBoundY()){
