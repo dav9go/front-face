@@ -7,7 +7,34 @@ import ASCIIcontainer from "../tags/ASCIIcontainer.astro"
 <section>
     <TechASCII />
     <ASCIIcontainer>
-        <p>This is content passed as children.</p>
-  <p>You can also pass more HTML here.</p>
+        <p class="container-content">This is content passed as children. This is content passed as children. This is content passed as children. This is content passed as children.</p>
     </ASCIIcontainer>
 </section>
+
+<style>
+    p {
+        white-space: wrap;
+    }
+    
+</style>
+
+<script>
+    let contentNodeList: NodeListOf<HTMLParagraphElement>;
+    window.addEventListener("load", (): void => {
+        contentNodeList = document.querySelectorAll(".container-content") as NodeListOf<HTMLParagraphElement>;
+    })
+
+    window.addEventListener("resize", (): void => {
+        console.log(contentNodeList)
+        if(contentNodeList.length > 0) {
+            contentNodeList.forEach((node: HTMLParagraphElement) => {
+                const nodeHeight: number = node.getBoundingClientRect().height;
+                const computedStyle:  CSSStyleDeclaration = window.getComputedStyle(node);
+                const lineHeightString: string = computedStyle.lineHeight;
+                const lineHeight: number = Number(lineHeightString.split("p")[0]);
+                const numberOfLines: number = nodeHeight / lineHeight;
+                console.log(numberOfLines)
+            })  
+        }
+    })
+</script>

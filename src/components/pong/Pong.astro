@@ -40,6 +40,7 @@ import Level from "./Level.astro"
         display: flex;
         justify-content: space-around;
         position: relative;
+        margin: 3rem 0;
     }
 
     .score-wrapper {
@@ -49,7 +50,7 @@ import Level from "./Level.astro"
     }
 
     .score-wrapper.player-two {
-        transform: translateX(-30px); /*Width of heart*/
+        transform: translateX(-30px); /*Heart's width*/
     }
 
     .score {
@@ -128,7 +129,7 @@ import Level from "./Level.astro"
     const ballWidth: number = 10;
     const ballHeight: number = 10;
     const ballVelocityY: number = 2;
-    const ballVelocityX: number = -15;
+    const ballVelocityX: number = -19;
 
     const initialBall: Ball = {
         x: boardWidth / 2,
