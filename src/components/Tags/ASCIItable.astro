@@ -1,0 +1,80 @@
+---
+
+---
+
+<div class="ascii-table">
+    <span class="side left-side" />
+    <span class="side top-side" />
+        <span class="cross left-top">+</span>
+        <span class="cross left-bottom">+</span>
+            <slot />
+        <span class="cross right-top">+</span>
+        <span class="cross right-bottom">+</span>
+    <span class="side left-side" />
+    <span class="side top-side" />
+</div>
+
+<style>
+    .ascii-table {
+        position: relative;
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .side {
+        position: absolute;
+        border: 1px dashed white;
+    }
+
+    .top-side, .bottom-side {
+        width: calc(100% - 25px);
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    .top-side {
+        top: 0;
+    }
+
+    .bottom-side {
+        bottom: 0;
+    }
+
+    .left-side, .right-side {
+        height: calc(100% - 25px);
+        top: 50%;
+        transform: translate(0 , -50%);
+    }
+
+    .left-side {
+        left: 0;
+    }
+
+    .right-side {
+        right: 0;
+    }
+
+    .cross {
+        position: absolute;
+    }
+
+    .left-top {
+        left: -3px;
+        top: -8px;
+    }
+
+    .right-top {
+        right: -3px;
+        top: -8px;
+    }
+
+    .left-bottom {
+        left: -3px;
+        bottom: -8px;
+    }
+
+    .right-bottom {
+        right: -3px;
+        bottom: -8px;
+    }
+</style>
